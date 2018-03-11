@@ -5,10 +5,11 @@ using UnityEngine;
 public class Maze : MonoBehaviour {
     
     public MazeWall wallPrefab;
+    public MazeWall pathPrefab; // Empty GameObject
     public MazeWall[,] walls;
-    public Position mazeSize;           // 迷宫大小
-    private  int enterX, enterY;    // 入口坐标
-    private  int endX, endY;              // 出口坐标
+    public Position mazeSize; // 迷宫大小
+    private  int enterX, enterY; // 入口坐标
+    private  int endX, endY; // 出口坐标
 
     public void Init()
     {
@@ -27,7 +28,11 @@ public class Maze : MonoBehaviour {
                 {
                     CreateWall(new Position(x, y));
                 }
-                //walls[x, y].IsVisited = false;
+                else
+                {
+                    CreatePath(new Position(x, y));
+                }
+                walls[x, y].IsVisited = false;
             }
         }
         // 设置出入口
@@ -47,6 +52,16 @@ public class Maze : MonoBehaviour {
         newWall.name = "Maze-" + coordinate.x + "," + coordinate.y;
         newWall.transform.parent = transform;
         newWall.transform.localPosition = new Vector3(coordinate.x, coordinate.y, 0);
+    }
+
+    private void CreatePath(Position coordinate)
+    {
+        MazeWall newPath = Instantiate(pathPrefab) as MazeWall;
+        walls[coordinate.x, coordinate.y] = newPath;
+        newPath.Coordinate = coordinate;
+        newPath.name = "Maze-" + coordinate.x + "," + coordinate.y;
+        newPath.transform.parent = transform;
+        newPath.transform.localPosition = new Vector3(coordinate.x, coordinate.y, 0);
     }
 
     private void FindEnterEndPoint()
