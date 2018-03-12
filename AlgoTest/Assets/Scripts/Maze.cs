@@ -4,33 +4,28 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour {
     
-    public MazeWall wallPrefab;
-    public MazeWall pathPrefab; // Empty GameObject
+    public MazeWall wallPrefab;    
     public MazeWall[,] walls;
-    public Position mazeSize; // 迷宫大小
     private  int enterX, enterY; // 入口坐标
     private  int endX, endY; // 出口坐标
 
     public void Init()
     {
-        if (mazeSize.x % 2 == 0 || mazeSize.y % 2 == 0)
+        if (Common.SizeX % 2 == 0 || Common.SizeY % 2 == 0)
         {
             UnityEditor.EditorUtility.DisplayDialog("错误警告", "输入的数值必须为奇数！", "确定");
             return;
         }
 
-        walls = new MazeWall[mazeSize.x, mazeSize.y];          
-        for (int x = 0; x < mazeSize.x; x++)
+        walls = new MazeWall[Common.SizeX, Common.SizeY];          
+        for (int x = 0; x < Common.SizeX; x++)
         {
-            for (int y = 0; y < mazeSize.y; y++)
+            for (int y = 0; y < Common.SizeY; y++)
             {
-                if (IsWall(x, y))
+                CreateWall(new Position(x, y));
+                if (!IsWall(x, y))
                 {
-                    CreateWall(new Position(x, y));
-                }
-                else
-                {
-                    CreatePath(new Position(x, y));
+                    CreatePath(walls[x, y]);
                 }
                 walls[x, y].IsVisited = false;
             }
@@ -54,21 +49,16 @@ public class Maze : MonoBehaviour {
         newWall.transform.localPosition = new Vector3(coordinate.x, coordinate.y, 0);
     }
 
-    private void CreatePath(Position coordinate)
+    private void CreatePath(MazeWall mWall)
     {
-        MazeWall newPath = Instantiate(pathPrefab) as MazeWall;
-        walls[coordinate.x, coordinate.y] = newPath;
-        newPath.Coordinate = coordinate;
-        newPath.name = "Maze-" + coordinate.x + "," + coordinate.y;
-        newPath.transform.parent = transform;
-        newPath.transform.localPosition = new Vector3(coordinate.x, coordinate.y, 0);
+        mWall.gameObject.SetActive(false);
     }
 
     private void FindEnterEndPoint()
     {
         enterX = 0;
-        enterY = mazeSize.y - 2;
-        endX = mazeSize.x - 1;
+        enterY = Common.SizeY - 2;
+        endX = Common.SizeX - 1;
         endY = 1;
         if(walls[enterX, enterY].gameObject != null)
         {
@@ -78,10 +68,10 @@ public class Maze : MonoBehaviour {
         {
             Destroy(walls[endX, endY].gameObject);
         }       
-    }
+    }    
 
-    public bool IsInArea(Position coordinate)
+    public void CreateMaze()
     {
-        return (coordinate.x >= 0 && coordinate.y >= 0) && (coordinate.x < mazeSize.x && coordinate.y < mazeSize.y);
+        //RandomBFS.RandomBFSFunc();
     }
 }
