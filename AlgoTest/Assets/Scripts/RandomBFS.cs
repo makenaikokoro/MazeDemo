@@ -8,30 +8,50 @@ public class RandomBFS : MonoBehaviour {
         
     public static List<MazeWall> wallList = new List<MazeWall>();
 
-    public static void RandomBFSFunc(MazeWall mWall)
+    public static void RandomBFSFunc(MazeWall iWall)
     {
-        wallList.Add(mWall);
-        mWall.IsVisited = true;
+        wallList.Add(iWall);
+        iWall.IsVisited = true;
 
         while (wallList.Count != 0)
         {
             int curIndex = Random.Range(0, wallList.Count - 1);
             MazeWall curWall = wallList[curIndex];
-            wallList.RemoveAt(curIndex);
+            wallList.RemoveAt(curIndex);            
 
             for(int i = 0; i < 4; i++)
             {
                 Position newPos;
                 newPos.x = curWall.Coordinate.x + dir[i, 0] * 2;
                 newPos.y = curWall.Coordinate.y + dir[i, 1] * 2;
-
-                if (mWall.IsInArea() && !mWall.IsVisited)
+                
+                if (IsInArea(newPos))
                 {
-                    wallList.Add(mWall);
-                    mWall.IsVisited = true;
-
+                    MazeWall nWall = Common.Walls[newPos.x, newPos.y];
+                    if (!nWall.IsVisited)
+                    {
+                        wallList.Add(nWall);
+                        nWall.IsVisited = true;
+                        SetPath(curWall.Coordinate.x + dir[i, 0], curWall.Coordinate.y + dir[i, 1]);
+                    }       
                 }
             }
+        }
+    }
+
+    private static bool IsInArea(Position coordinate)
+    {
+        return (coordinate.x >= 0 && coordinate.y >= 0) && (coordinate.x < Common.SizeX && coordinate.y < Common.SizeY);
+    }
+
+    private static void SetPath(int x, int y)
+    {
+        Position coordinate;
+        coordinate.x = x;
+        coordinate.y = y;
+        if (IsInArea(coordinate))
+        {
+            Common.Walls[coordinate.x, coordinate.y].gameObject.SetActive(false);
         }
     }
 }

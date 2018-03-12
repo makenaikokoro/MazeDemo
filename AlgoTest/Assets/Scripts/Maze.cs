@@ -30,11 +30,17 @@ public class Maze : MonoBehaviour {
                 walls[x, y].IsVisited = false;
             }
         }
+        Common.Walls = walls;
         // 设置出入口
         FindEnterEndPoint();
     }
 
-	private bool IsWall(int x, int y)
+    public void Create()
+    {
+        RandomBFS.RandomBFSFunc(walls[enterX + 1, enterY]);
+    }
+
+    private bool IsWall(int x, int y)
     {
         return (x % 2 == 0 || y % 2 == 0) ? true : false;        
     }
@@ -68,10 +74,5 @@ public class Maze : MonoBehaviour {
         {
             Destroy(walls[endX, endY].gameObject);
         }       
-    }    
-
-    public void CreateMaze()
-    {
-        //RandomBFS.RandomBFSFunc();
-    }
+    }        
 }

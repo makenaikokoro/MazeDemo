@@ -6,7 +6,9 @@ using UnityEngine;
 public class Common {
 
     private int _sizeX, _sizeY;
+    private MazeWall[,] _walls;
 
     public static int SizeX { get; set; }
     public static int SizeY { get; set; }
+    public static MazeWall[,] Walls { get; set; }
 }

@@ -13,12 +13,13 @@ public class GameManager : MonoBehaviour {
     {
         Common.SizeX = sizeX;
         Common.SizeY = sizeY;
-        MazeInit();
+        MazeGenerate();
     }
 
-    void MazeInit()
+    void MazeGenerate()
     {
         mazeInstance = Instantiate(mazePrefab) as Maze;
         mazeInstance.Init();
+        mazeInstance.Create();
     }
 }

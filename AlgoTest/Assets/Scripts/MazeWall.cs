@@ -10,8 +10,5 @@ public class MazeWall : MonoBehaviour {
     public bool IsVisited { get; set; }    
     public Position Coordinate { get; set; }
 
-    public bool IsInArea()
-    {
-        return (Coordinate.x >= 0 && Coordinate.y >= 0) && (Coordinate.x < Common.SizeX && Coordinate.y < Common.SizeY);
-    }
+    
 }
