@@ -11,15 +11,29 @@ public class GameManager : MonoBehaviour {
 
     void Start()
     {
-        Common.SizeX = sizeX;
-        Common.SizeY = sizeY;
         MazeGenerate();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Restart();
+        }
     }
 
     void MazeGenerate()
     {
+        Common.SizeX = sizeX;
+        Common.SizeY = sizeY;
         mazeInstance = Instantiate(mazePrefab) as Maze;
         mazeInstance.Init();
         mazeInstance.Create();
+    }
+
+    void Restart()
+    {
+        Destroy(mazeInstance.gameObject);
+        MazeGenerate();
     }
 }
