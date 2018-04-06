@@ -28,6 +28,8 @@ public class Maze : MonoBehaviour {
                     CreatePath(walls[x, y]);
                 }
                 walls[x, y].IsVisited = false;
+                walls[x, y].IsPath = false;
+                walls[x, y].IsRightPath = false;
             }
         }
         Common.Walls = walls;
@@ -75,4 +77,21 @@ public class Maze : MonoBehaviour {
             Destroy(walls[endX, endY].gameObject);
         }       
     }        
+
+    public void DrawRedPath()
+    {
+        FindPath.FindPathFunc(Common.Walls[enterX, enterY]);
+
+        for (int i = 0; i < Common.SizeX; i++)
+        {
+            for(int j = 0; j < Common.SizeY; j++)
+            {
+                if (Common.Walls[i, j].IsRightPath)
+                {
+                    Common.Walls[i, j].gameObject.SetActive(true);
+                    Common.Walls[i, j].gameObject.GetComponent<Renderer>().material.color = Color.red;
+                }
+            }
+        }
+    }
 }

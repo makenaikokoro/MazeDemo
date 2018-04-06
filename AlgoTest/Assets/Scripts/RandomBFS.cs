@@ -6,33 +6,31 @@ public class RandomBFS : MonoBehaviour {
 
     public static int[,] dir = new int[4, 2] { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } }; // 四个方向
         
-    public static List<MazeWall> wallList = new List<MazeWall>();
+    public static RandomQueue<MazeWall> wallList = new RandomQueue<MazeWall>();
 
     public static void RandomBFSFunc(MazeWall iWall)
     {
-        wallList.Add(iWall);
+        wallList.RandomAdd(iWall);
         iWall.IsVisited = true;
 
-        while (wallList.Count != 0)
+        while (wallList.size() != 0)
         {
-            int curIndex = Random.Range(0, wallList.Count);
-            MazeWall curWall = wallList[curIndex];
-            wallList.RemoveAt(curIndex);            
+            MazeWall curPos = wallList.RandomRemove();           
 
             for(int i = 0; i < 4; i++)
             {
                 Position newPos;
-                newPos.x = curWall.Coordinate.x + dir[i, 0] * 2;
-                newPos.y = curWall.Coordinate.y + dir[i, 1] * 2;
+                newPos.x = curPos.Coordinate.x + dir[i, 0] * 2;
+                newPos.y = curPos.Coordinate.y + dir[i, 1] * 2;
                 
                 if (IsInArea(newPos))
                 {
                     MazeWall nWall = Common.Walls[newPos.x, newPos.y];
                     if (!nWall.IsVisited)
                     {
-                        wallList.Add(nWall);
+                        wallList.RandomAdd(nWall);
                         nWall.IsVisited = true;
-                        SetPath(curWall.Coordinate.x + dir[i, 0], curWall.Coordinate.y + dir[i, 1]);
+                        SetPath(curPos.Coordinate.x + dir[i, 0], curPos.Coordinate.y + dir[i, 1]);
                     }       
                 }
             }
@@ -51,6 +49,8 @@ public class RandomBFS : MonoBehaviour {
         coordinate.y = y;
         if (IsInArea(coordinate))
         {
+            MazeWall mazeWall = Common.Walls[coordinate.x, coordinate.y];
+            mazeWall.IsPath = true;
             Common.Walls[coordinate.x, coordinate.y].gameObject.SetActive(false);
         }
     }

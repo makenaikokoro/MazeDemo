@@ -36,4 +36,9 @@ public class GameManager : MonoBehaviour {
         Destroy(mazeInstance.gameObject);
         MazeGenerate();
     }
+
+    void OnFindPathButtonClick()
+    {
+        mazeInstance.DrawRedPath();
+    }
 }
