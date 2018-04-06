@@ -15,7 +15,7 @@ public class RandomBFS : MonoBehaviour {
 
         while (wallList.Count != 0)
         {
-            int curIndex = Random.Range(0, wallList.Count - 1);
+            int curIndex = Random.Range(0, wallList.Count);
             MazeWall curWall = wallList[curIndex];
             wallList.RemoveAt(curIndex);            
 
