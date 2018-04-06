@@ -16,10 +16,7 @@ public class GameManager : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Restart();
-        }
+
     }
 
     void MazeGenerate()
@@ -31,13 +28,13 @@ public class GameManager : MonoBehaviour {
         mazeInstance.Create();
     }
 
-    void Restart()
+    public void OnRestartButtonClick()
     {
         Destroy(mazeInstance.gameObject);
         MazeGenerate();
     }
 
-    void OnFindPathButtonClick()
+    public void OnFindPathButtonClick()
     {
         mazeInstance.DrawRedPath();
     }

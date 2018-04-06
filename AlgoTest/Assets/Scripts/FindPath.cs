@@ -9,37 +9,49 @@ public class FindPath : MonoBehaviour {
     public static bool FindPathFunc(MazeWall mWall)
     {
         int posX, posY;
-        if (!RandomBFS.IsInArea(mWall.Coordinate))
-        {
-            UnityEditor.EditorUtility.DisplayDialog("错误警告", "数！", "确定");
-            return;
-        }
+        //if (!RandomBFS.IsInArea(mWall.Coordinate))
+        //{
+        //    UnityEditor.EditorUtility.DisplayDialog("错误警告", "数！", "确定");
+        //    return false;
+        //}
         posX = mWall.Coordinate.x;
         posY = mWall.Coordinate.y;
 
-        mWall.IsVisited = true;
-        mWall.IsRightPath = true;
+        mWall.IsFindPathVisited = true;
+        if (IsCoordinateInArea(mWall.Coordinate.x, mWall.Coordinate.y))
+            mWall.IsRightPath = true;
 
-        if(x == Common.sizeX - 1 && y == 1)
+        if(posX == Common.SizeX - 1 && posY == 1)
         {
             return true;
         }
 
         for(int i = 0; i < 4; i++)
         {
-            int newX = posX + dir[i][0];
-            int newY = posY + dir[i][1];
-            MazeWall newWall = Common.Walls[newX, newY];
-            if (RandomBFS.IsInArea(newWall.Coordinate) && newWall.IsPath && !newWall.IsVisited)
+            int newX = posX + dir[i,0];
+            int newY = posY + dir[i,1];
+            if(IsCoordinateInArea(newX, newY))
             {
-                if (FindPathFunc(newWall))
+                MazeWall newWall = Common.Walls[newX, newY];
+                if(newWall.IsPath && !newWall.IsFindPathVisited)
                 {
-                    return true;
+                    if (FindPathFunc(newWall))
+                    {
+                        return true;
+                    }
                 }
             }
         }
-        mWall.IsRightPath = false;
+        if (IsCoordinateInArea(mWall.Coordinate.x, mWall.Coordinate.y))
+        {
+            mWall.IsRightPath = false;
+        }        
 
         return false;
+    }
+
+    static bool IsCoordinateInArea(int x,int y)
+    {
+        return (x >= 0 && y >= 0 && x < Common.SizeX && y < Common.SizeY);
     }
 }

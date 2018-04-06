@@ -5,7 +5,7 @@ using UnityEngine;
 public class Maze : MonoBehaviour {
     
     public MazeWall wallPrefab;    
-    public MazeWall[,] walls;
+    //public MazeWall[,] walls;
     private  int enterX, enterY; // 入口坐标
     private  int endX, endY; // 出口坐标
 
@@ -17,7 +17,7 @@ public class Maze : MonoBehaviour {
             return;
         }
 
-        walls = new MazeWall[Common.SizeX, Common.SizeY];          
+        Common.Walls = new MazeWall[Common.SizeX, Common.SizeY];          
         for (int x = 0; x < Common.SizeX; x++)
         {
             for (int y = 0; y < Common.SizeY; y++)
@@ -25,21 +25,22 @@ public class Maze : MonoBehaviour {
                 CreateWall(new Position(x, y));
                 if (!IsWall(x, y))
                 {
-                    CreatePath(walls[x, y]);
+                    CreatePath(Common.Walls[x, y]);
                 }
-                walls[x, y].IsVisited = false;
-                walls[x, y].IsPath = false;
-                walls[x, y].IsRightPath = false;
+
+                Common.Walls[x, y].IsVisited = false;
+                Common.Walls[x, y].IsRightPath = false;
             }
-        }
-        Common.Walls = walls;
+        }        
         // 设置出入口
         FindEnterEndPoint();
+
+        //Common.Walls = walls;
     }
 
     public void Create()
     {
-        RandomBFS.RandomBFSFunc(walls[enterX + 1, enterY]);
+        RandomBFS.RandomBFSFunc(Common.Walls[enterX + 1, enterY]);
     }
 
     private bool IsWall(int x, int y)
@@ -50,7 +51,7 @@ public class Maze : MonoBehaviour {
     private void CreateWall(Position coordinate)
     {
         MazeWall newWall = Instantiate(wallPrefab) as MazeWall;
-        walls[coordinate.x, coordinate.y] = newWall;
+        Common.Walls[coordinate.x, coordinate.y] = newWall;
         newWall.Coordinate = coordinate;
         newWall.name = "Maze-" + coordinate.x + "," + coordinate.y;
         newWall.transform.parent = transform;
@@ -59,6 +60,7 @@ public class Maze : MonoBehaviour {
 
     private void CreatePath(MazeWall mWall)
     {
+        mWall.IsPath = true;
         mWall.gameObject.SetActive(false);
     }
 
@@ -68,20 +70,26 @@ public class Maze : MonoBehaviour {
         enterY = Common.SizeY - 2;
         endX = Common.SizeX - 1;
         endY = 1;
-        if(walls[enterX, enterY].gameObject != null)
+        if(Common.Walls[enterX, enterY].gameObject != null)
         {
-            Destroy(walls[enterX, enterY].gameObject);
+            Common.Walls[enterX, enterY].IsPath = true;
+            Common.Walls[enterX, enterY].gameObject.SetActive(false);
         }
-        if(walls[endX, endY].gameObject != null)
+        if(Common.Walls[endX, endY].gameObject != null)
         {
-            Destroy(walls[endX, endY].gameObject);
+            Common.Walls[endX, endY].IsPath = true;
+            Common.Walls[endX, endY].gameObject.SetActive(false);
         }       
     }        
 
     public void DrawRedPath()
     {
-        FindPath.FindPathFunc(Common.Walls[enterX, enterY]);
-
+        if(!FindPath.FindPathFunc(Common.Walls[enterX, enterY]))
+        {
+            UnityEditor.EditorUtility.DisplayDialog("错误警告", "zbd！", "确定");
+            return;
+        }
+        
         for (int i = 0; i < Common.SizeX; i++)
         {
             for(int j = 0; j < Common.SizeY; j++)

@@ -37,7 +37,7 @@ public class RandomBFS : MonoBehaviour {
         }
     }
 
-    private static bool IsInArea(Position coordinate)
+    public static bool IsInArea(Position coordinate)
     {
         return (coordinate.x >= 0 && coordinate.y >= 0) && (coordinate.x < Common.SizeX && coordinate.y < Common.SizeY);
     }
@@ -49,8 +49,7 @@ public class RandomBFS : MonoBehaviour {
         coordinate.y = y;
         if (IsInArea(coordinate))
         {
-            MazeWall mazeWall = Common.Walls[coordinate.x, coordinate.y];
-            mazeWall.IsPath = true;
+            Common.Walls[coordinate.x, coordinate.y].IsPath = true;
             Common.Walls[coordinate.x, coordinate.y].gameObject.SetActive(false);
         }
     }
