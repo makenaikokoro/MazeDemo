@@ -11,13 +11,15 @@ public class Maze : MonoBehaviour {
 
     public void Init()
     {
+        //判定输入的迷宫长宽值是否合法
         if (Common.SizeX % 2 == 0 || Common.SizeY % 2 == 0)
         {
-            UnityEditor.EditorUtility.DisplayDialog("错误警告", "输入的数值必须为奇数！", "确定");
+            UnityEditor.EditorUtility.DisplayDialog("错误警告", "迷宫的长宽必须为奇数！", "确定");
             return;
         }
 
-        Common.Walls = new MazeWall[Common.SizeX, Common.SizeY];          
+        Common.Walls = new MazeWall[Common.SizeX, Common.SizeY];  
+        //循环遍历迷宫中的迷宫单位，设置成墙与路径
         for (int x = 0; x < Common.SizeX; x++)
         {
             for (int y = 0; y < Common.SizeY; y++)
@@ -35,7 +37,7 @@ public class Maze : MonoBehaviour {
         // 设置出入口
         FindEnterEndPoint();
 
-        //Common.Walls = walls;
+     
     }
 
     public void Create()
